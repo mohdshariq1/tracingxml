@@ -37,11 +37,6 @@
 
     <import resource="classpath:META-INF/cxf/cxf.xml" />
 
-    <!-- JAXRS providers -->
-    <bean id="jsonProvider" class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider" />
-    <bean id="multipartProvider" class="org.apache.cxf.jaxrs.provider.MultipartProvider" />
-    <bean id="originFilter" class="org.mshariq.cxf.brave.ApiOriginFilter" />
-
     <!-- Application resources -->
     <bean id="sampleResource" class="org.mshariq.cxf.brave.Sample" />
 
@@ -55,21 +50,12 @@
         </cxf:features>
     </cxf:bus>
 
-    <jaxrs:server id="sampleServer" address="http://localhost:9010/swaggerSample">
-        <jaxrs:serviceBeans>
-            <ref bean="sampleResource" />
-        </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <ref bean="jsonProvider" />
-            <ref bean="multipartProvider" />
-            <ref bean="originFilter" />
-        </jaxrs:providers>
-        <jaxrs:features>
-            <ref bean="swagger2Feature" />
-        </jaxrs:features>
-    </jaxrs:server>
     
-  
+   <jaxrs-client:client id="sampleClient"
+    	address="http://localhost:9010/swaggerSample"
+    	serviceClass="org.mshariq.cxf.brave.SampleInterface">
+    	
+    </jaxrs-client:client>
     
 
 </beans>

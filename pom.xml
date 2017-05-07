@@ -108,7 +108,7 @@
 									<goal>java</goal>
 								</goals>
 								<configuration>
-									<mainClass>demo.jaxrs.tracing.client.Client</mainClass>
+									<mainClass>org.mshariq.cxf.brave.Client</mainClass>
 								</configuration>
 							</execution>
 						</executions>
