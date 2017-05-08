@@ -44,11 +44,24 @@
 
     <!-- Application resources -->
     <bean id="sampleResource" class="org.mshariq.cxf.brave.Sample" />
+        <bean  class="org.mshariq.cxf.brave.CatalogApplication" />
+    
 
     <!-- CXF Swagger2Feature -->  
     <bean id="swagger2Feature" class="org.apache.cxf.jaxrs.swagger.Swagger2Feature">
     </bean>
+    
+    
+    <!-- <bean id="braveBuilder" class="com.github.kristofa.brave.Brave.Builder">
+        <argument index="0" value="catalog-service" />
+    </bean>
+    
+	    <bean id="braveFeature" class="org.apache.cxf.tracing.brave.BraveFeature">
+    <property name="brave" ref="brave"></property>
+    </bean>
+    <bean id="brave" class="com.github.kristofa.brave.Brave"/>
 
+ -->
     <cxf:bus>
         <cxf:features>
             <cxf:logging />
@@ -66,6 +79,7 @@
         </jaxrs:providers>
         <jaxrs:features>
             <ref bean="swagger2Feature" />
+            <!-- <ref bean="braveFeature" /> -->
         </jaxrs:features>
     </jaxrs:server>
     

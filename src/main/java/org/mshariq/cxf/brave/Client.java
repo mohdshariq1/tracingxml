@@ -19,21 +19,49 @@
 
 package org.mshariq.cxf.brave;
 
+import java.util.Arrays;
+
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import org.apache.cxf.jaxrs.client.WebClient;
+import org.apache.cxf.tracing.brave.jaxrs.BraveClientProvider;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import com.github.kristofa.brave.Brave;
+
+import zipkin.Span;
+import zipkin.reporter.AsyncReporter;
+import zipkin.reporter.okhttp3.OkHttpSender;
 
 public final class Client {
     private Client() {
     }
 
     public static void main(String args[]) throws Exception {
-        ApplicationContext appctxt =
+
+    	  OkHttpSender sender = OkHttpSender.create("http://127.0.0.1:9411/api/v1/spans");
+          AsyncReporter<Span> reporter = AsyncReporter.builder(sender).build();
+          Brave brave = new Brave.Builder("clientNew").reporter(reporter).build();
+          final BraveClientProvider provider = new BraveClientProvider(brave);
+
+          final Response response = WebClient
+              .create("http://localhost:9000/catalog/2", Arrays.asList(provider))
+              .accept(MediaType.APPLICATION_JSON)
+              .get();
+
+          
+    	ApplicationContext appctxt =
             new ClassPathXmlApplicationContext(Client.class.getResource("/context-client.xml").toString());
 
         System.out.println("Client ready...");
         SampleInterface client = (SampleInterface) appctxt.getBean("sampleClient");
         System.out.println(client.getItems(0) );
-        
+    response.close();
+    reporter.close();
+    sender.close();
+    
       //  Thread.sleep(5 * 6000 * 1000);
         System.out.println("Server exiting");
         System.exit(0);
